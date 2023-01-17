@@ -1,0 +1,69 @@
+{%extends 'home/base.html'%}
+
+{%block content%}
+<h1 class="mt-4">Treatment</h1>
+<table class="table table-info responsive">
+    <tr>
+        <th colspan="6">Symptoms</th>
+    </tr>
+    <tr>
+        <td colspan="6">{{pc.symptoms}}</td>
+    </tr>
+    <tr>
+        <th>BP</th>
+        <th>BMI</th>
+        <th>BS</th>
+        <th>HB</th>
+        <th>Platelets</th>
+        <th>Action</th>
+    </tr>
+
+    <tr>
+        <td>{{pc.BP}}</td>
+        <td>{{pc.BMI}}</td>
+        <td>{{pc.BS}}</td>
+        <td>{{pc.HB}}</td>
+        <td>{{pc.platelets}}</td>
+        <td><button class="btn btn-primary" onclick="func()">Start Treatment</button></td>
+    </tr>
+</table>
+<div id="prescription">
+    <form action="" method="post">
+        {%csrf_token%}
+        <div class="container">
+            <div class="row ">
+                <div class="col-md-6 ">
+                    Patient suffered by 
+                </div>
+                <div class="col-md-6">
+                    <select name="diseaseType" id="" class="form-control">
+                        {%for c in dc%}
+                        <option value="{{c.id}}">{{c.name}}</option>
+                        {%endfor%}
+                    </select>
+                </div>
+            </div>
+            <div class="row m-2">
+                <div class="col-md-6">
+                    Prescription 
+                </div>
+                <div class="col-md-6">
+                    <textarea name="pre" id="" cols="30" rows="10"></textarea>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary m-2">Prescribe</button>
+        
+   
+    </form>
+
+</div>
+<script>
+    window.onload = function () {
+        document.getElementById('prescription').style.display = 'none';
+    };
+    function func() {
+        document.getElementById('prescription').style.display = '';
+    };
+</script>
+{%endblock%}

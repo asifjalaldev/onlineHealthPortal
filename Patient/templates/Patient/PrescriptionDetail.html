@@ -1,0 +1,30 @@
+{%extends 'home/base.html'%}
+
+{%block content%}
+<table class="table table-info responsive">
+    <tr >
+        <th colspan="6">Prescription</th>
+    </tr>
+    <tr>
+        <td colspan="6">{{pre.prescription}}</td>
+    </tr>
+    <tr >
+        <td class="">Prescribe by:</td>
+      
+      
+    
+    </tr>
+   
+    <tr>
+       
+        <th style="padding-left: 60px;">{{pre.doctor_id.DoctorName}} <br> <p style="font-weight: lighter; opacity: 70%;">{{pre.doctor_id.catagory_id.catagoryName}}</p></th>
+       
+       
+    </tr>
+    <tr class="text-center">
+        <td><a class="btn btn-primary" href="{%url 'patientDashboard'%}">Back</a></td>
+    </tr>
+</table>
+
+
+{%endblock%}

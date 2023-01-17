@@ -1,0 +1,31 @@
+{%extends 'home/base.html'%}
+
+{%block content%}
+<table class="table table-info responsive">
+    <tr >
+        <th colspan="6">Symptoms</th>
+    </tr>
+    <tr>
+        <td colspan="6">{{pc.symptoms}}</td>
+    </tr>
+    <tr >
+        <th>BP</th>
+        <th>BMI</th>
+        <th>BS</th>
+        <th>HB</th>
+        <th>Platelets</th>
+        <th>Action</th>
+    </tr>
+   
+    <tr>
+        <td>{{pc.BP}}</td>
+        <td>{{pc.BMI}}</td>
+        <td>{{pc.BS}}</td>
+        <td>{{pc.HB}}</td>
+        <td>{{pc.platelets}}</td>
+        <td><a class="btn btn-primary" href="{% url 'UpdatePC' pc.id %}">Edit</a></td>
+    </tr>
+</table>
+
+
+{%endblock%}

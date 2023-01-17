@@ -1,0 +1,193 @@
+{%extends 'home/base.html'%}
+{%block content%}
+
+{%block scripts%}
+
+
+{%endblock scripts%}
+
+
+<div class="container">
+<h3 class="mt-2">Dashboard</h3>
+<style>
+    #pre {
+        overflow: hidden;
+        width: 100px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    @media screen and (max-width: 500px) {
+        table {
+            border-collapse: collapse;
+            width: 50% !important;
+
+        }
+        .canvas1{
+            display: none;
+        }
+    }
+</style>
+<div class="row">
+    <p>Last Month Report of Patients Diseases</p>
+    <div class="col-lg-6">
+        <div class="card mb-4">
+           
+            <div class="card-body canvas1"><canvas id="myPieChart1" width="100%" height="40"></canvas></div>
+      
+    <script>
+                    var ctx = document.getElementById('myPieChart1').getContext('2d');
+                    var myChart1 = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: [{% for catagory in diseaseCatagories %} '{{ catagory.name }}', {% endfor %}],
+                    datasets: [{
+                        label: 'Number of Products',
+                        data: [{% for product in diseaseCatagoryCount %} {{ product }}, {% endfor %}],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 15)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 2)',
+                            'rgba(255, 159, 64, 5)'
+                        ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                                borderWidth: 1
+                    }]
+                        },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                    });
+                </script>
+
+            <div class="card-footer small text-muted"></div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card mb-4">
+           
+            <div class="card-body"><canvas id="myPieChart2" width="100%" height="40"></canvas></div>
+      
+    <script>
+                    var ctx = document.getElementById('myPieChart2').getContext('2d');
+                    var myChart1 = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: [{% for catagory in diseaseCatagories %} '{{ catagory.name }}', {% endfor %}],
+                    datasets: [{
+                        label: 'Disease ratios',
+                        data: [{% for product in diseaseCatagoryCount %} {{ product }}, {% endfor %}],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 15)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 2)',
+                            'rgba(255, 159, 64, 5)'
+                        ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                                borderWidth: 1
+                    }]
+                        },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                    });
+                </script>
+
+            <div class="card-footer small text-muted"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-header">
+                <h5 class="card-title text-center">Today Appointments</h5>
+            </div>
+            <div class="card-body text-center">
+                <h4><span class="fa fa-calendar" style="margin-right: 6px;"></span>{{totalTodayAppointments}}</h4>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="{% url 'appointments' %}">View Details</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card text-white mb-4" style=" background-color:rgb(129, 62, 192);">
+            <div class="card-header">
+                <h5 class="card-title">Total Appointments</h5>
+            </div>
+            <div class="card-body text-center"><h4><span class="fa fa-calendar" style="padding-right:8px;"></span>{{totalAppointments}}</h4></div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="{% url 'totalAppointments' %}">View Details</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card text-white mb-4" style=" background-color:rgb(255, 166, 2);">
+            <div class="card-header">
+                <h5 class="card-title">Monthly Appointments</h5>
+            </div>
+            <div class="card-body text-center"><h4><span class="fa fa-calendar" style="padding-right:8px;"></span>{{lastMonthAppointmentsCount}}</h4></div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="{% url 'monthlyAppointments' %}">View Details</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-danger text-white mb-4">
+            <div class="card-header">
+                <h5 class="card-title">Expired Appointments</h5>
+            </div>
+            <div class="card-body text-center"><h4><span class="fa fa-calendar" style="padding-right:8px;"></span>{{unTreatedAppointments}}</h4></div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="{% url 'expireAppointments' %}">View Details</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+
+    <!-- ------------------------------- -->
+
+
+    {%endblock%}

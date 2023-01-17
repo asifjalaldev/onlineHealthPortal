@@ -1,0 +1,1 @@
+web: gunicorn Hc_proj.wsgi

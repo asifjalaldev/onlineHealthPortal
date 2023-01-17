@@ -1,0 +1,234 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>OHP</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+            integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <!--Chartjs CDN-->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+
+    </head>
+
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="{%url 'home'%}">Online Health Portal</a>
+            <!-- Sidebar Toggle-->
+            {%if request.user.is_anonymous %}
+            {%else%}
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+                    class="fas fa-bars"></i></button>
+                    {%endif%}
+            <!-- Navbar Search-->
+            {%if request.user.doctor %}
+            <form action="" class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"></form>
+            {%endif%}
+            {%if request.user.is_anonymous %}
+            <form action="" class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"></form>
+            <a class="nav-link " href="{% url 'login' %}"><span class="fa fa-sign-in"
+                    style="background-color: white;"></span>Login</a>
+                    <a class="nav-link" href="{% url 'home' %}">
+                        <div class="sb-nav-link-icon"></div>
+                        Home
+                    </a>
+              
+
+            {%endif%}
+            <!-- <a class="nav-link "  href="{% url 'login' %}" >Login</a> -->
+
+            {%if request.user.patient %}
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
+                action="{% url 'searchDoctors' %}" method="get">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="catagory" value="0"
+                        placeholder="Search doctor by name" hidden>
+                    <input class="form-control" name="query" type="text" placeholder="Search for..."
+                        aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i
+                            class="fas fa-search"></i></button>
+                </div>
+            </form>
+            {%endif%}
+            <!-- Navbar-->
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <!-- <i class="fas fa-user fa-fw"></i> -->
+
+                    {%if request.user.patient and request.user.patient.profilePicture%}
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false"><img class="rounded-circle"
+                            style="height: 50px; width:50px; object-fit: cover; border:1px solid white"
+                            src="{{request.user.patient.profilePicture.url}}" alt="{{request.user.username}}"></a>
+
+                    {%elif request.user.doctor and request.user.doctor.profilePicture%}
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false"><img class="rounded-circle"
+                            style="height: 50px; width:50px; object-fit: cover; border:1px solid white"
+                            src="{{request.user.doctor.profilePicture.url}}" alt="{{request.user.username}}"></a>
+
+                    {%elif request.user.is_anonymous%}
+                    
+                    {%else%}
+
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user"></i></a>
+                    {%endif%}
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        {%if request.user.doctor%}
+                        <li><a class="dropdown-item" href="{%url 'doctorProfile'%}">Profile</a></li>
+                        {%endif%}
+                        {%if request.user.patient%}
+                        <li><a class="dropdown-item" href="{%url 'patientProfile'%}">Profile</a></li>
+                        {%endif%}
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li><a class="dropdown-item" href="{%url 'logout'%}">Logout</a></li>
+                        <li> <a class="nav-link" href="{% url 'home' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Home
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                {%if request.user.is_anonymous %}
+                {%else%}
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+
+                        <div class="nav">
+                            
+                           
+                            {%if request.user.doctor%}
+                            <div class="sb-sidenav-menu-heading">Patient Dashboard</div>
+                            <a class="nav-link" href="{%url 'doctorDashboard' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+                            <a class="nav-link" href="{% url 'doctorProfile'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                Profile
+                            </a>
+                            <a class="nav-link" href="{% url 'appointments'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-calendar"></i></div>
+                                Today Appointments
+                            </a>
+                            <a class="nav-link" href="{% url 'expireAppointments'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-calendar"></i></div>
+                                Expire Appointments
+                            </a>
+                            <a class="nav-link" href="{% url 'monthlyAppointments'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-calendar"></i></div>
+                                Monthly Appointments
+                            </a>
+                            <a class="nav-link" href="{% url 'totalAppointments'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-calendar"></i></div>
+                                All Appointments
+                            </a>
+                            {%endif%}
+
+                            {%if request.user.patient%}
+                            <div class="sb-sidenav-menu-heading">Patient Dashboard</div>
+                            <a class="nav-link" href="{%url 'patientDashboard' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+                            <a class="nav-link" href="{% url 'home' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Home
+                            </a>
+                            <a class="nav-link" href="{% url 'patientProfile'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                Patient Profile
+                            </a>
+                            <a class="nav-link" href="{% url 'searchDoctors' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Search Doctors
+                            </a>
+
+                            {%endif%}
+
+                        </div>
+                        {%endif%}
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        {%if request.user%}
+                        {{request.user}}
+                        {%endif%}
+                    </div>
+                </nav>
+
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid " style="padding-left: 0% !important; padding-right: 0% !important;">
+                        <!-- <h1 class="mt-4">Home</h1> -->
+
+                        {%for message in messages%}
+                        {% if message.tags == 'error' %}
+                        <p class="text text-danger">{{message}}</p>
+                        {%endif%}
+                        {%if message.tags == 'success' %}
+                        <p class="text text-success">{{message}}</p>
+                        {%endif%}
+
+                        {%endfor%}
+
+                        {%block scripts%}
+
+                        {%endblock scripts%}
+
+                        {%block content%}
+
+
+                        {%endblock%}
+
+                    </div>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Online Health Portal 2023</div>
+                            <div>
+
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+        <script src="{% static 'js/scripts.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+
+        <!-- ---------------------------------- -->
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+            crossorigin="anonymous"></script>
+        <script src="{% static 'assets/demo/chart-area-demo.js' %}"></script>
+        <script src="{% static 'assets/demo/chart-bar-demo.js' %}"></script>
+        <script src="{% static 'assets/demo/chart-pie-demo.js' %}"></script>
+
+        <!-- ---------------------------------- -->
+    </body>
+
+</html>

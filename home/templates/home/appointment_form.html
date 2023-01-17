@@ -1,0 +1,57 @@
+{%extends 'home/base.html'%}
+{%load crispy_forms_tags%}
+{%block content%}
+<div class="container" style="background-color: aquamarine;">
+    <div class="row mt-3 p-1 text-center" style="background-color: rgb(46, 231, 0);">
+        <div class="col-sm-2">
+          
+        </div>
+        {%if avalaibleSlots == 0 %}
+        <div class="col-sm-6" style="color: red;"> <h4> Available Slots : <b>{{avalaibleSlots}}</b></h4></div>
+        {%else%}
+        <div class="col-sm-6"> <h4> Available Slots : <b>{{avalaibleSlots}}</b></h4></div>
+        {%endif%}
+       
+        <div class="col-sm-2">
+          
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm-2">
+            {%if doctor.profilePicture%}
+            {%if avalaibleSlots == 0 %}
+            <figure class="text-center" style="opacity: 50%;">
+                <img src="{{doctor.profilePicture.url}}" alt="" style="height:150px; width: 150px; object-fit:cover; border:2px solid green;">
+                <figcaption class="text-center"> {{doctor.DoctorName}}</figcaption>
+            </figure> 
+              {%else%}
+            
+    <figure class="text-center">
+        <img src="{{doctor.profilePicture.url}}" alt="" style="height:150px; width: 150px; object-fit:cover; border:2px solid green;">
+        <figcaption class="text-center"> {{doctor.DoctorName}}</figcaption>
+    </figure> 
+    {%endif%}   
+    {%endif%}   
+    
+    </div>
+        <div class="col-sm-8">
+            <form action="" method="post" style="width: 80%; ">
+                {% csrf_token %}
+
+                {{form|crispy}}
+                {%if avalaibleSlots == 0 %}
+                <p class="text-center mt-2" style="color: red;">Sorry! This doctor is not available for today, Choose another one.</p>
+                <p class="text-center mt-3"><button class="btn btn-primary" type="submit" disabled>Make an Appointment</button></p>
+                {%else%}
+                <p class="text-center mt-3"><button class="btn btn-primary" type="submit" >Make an Appointment</button></p>
+                {%endif%}
+            </form>
+        </div>
+        <div class="col-sm-2">
+
+        </div>
+
+    </div>
+
+</div>
+{%endblock%}

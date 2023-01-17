@@ -1,0 +1,64 @@
+{%extends 'home/base.html'%}
+
+{%block content%}
+
+<div class="container p-3" style="background-color: rgb(172, 250, 250);">
+    <div class="row text-center p-3">
+        <div class="col-sm-4">
+            <b>Doctor</b><br>
+            {{app.doctor_id.DoctorName}}
+        </div>
+        <div class="col-sm-4">
+            <b>Appointment Date</b><br>
+            {{app.appointment_date}} <span style="padding-left:8px;"> {{app.time}}</span> 
+        </div>
+        <div class="col-sm-2">
+            <a class="btn btn-primary" href="{% url 'updateAppointment' app.id %}">Edit </a> 
+        </div>
+        <div class="col-sm-2">
+            <a class="btn btn-danger" href="{%url 'deleteAppointment' app.id %}">Delete </a>
+        </div>
+    </div>
+<hr>
+    <div class="row m-3">
+        <div class="col-sm-12">
+           <b> Symptoms</b> <br> {{pc.symptoms}}
+        </div>
+      
+    </div>
+    <div class="row text-center">
+        <div class="col-sm-2">
+            <b>BP</b><br>
+            {{pc.BP}}
+        </div>
+        <div class="col-sm-2">
+            <b>BMI</b><br>
+            {{pc.BMI}}
+        </div>
+        <div class="col-sm-2">
+            <b>BS</b><br>
+            {{pc.BS}}
+        </div>
+        <div class="col-sm-2">
+            <b>HB</b><br>
+            {{pc.HB}}
+        </div>
+        <div class="col-sm-2">
+            <b>Platelets</b><br>
+            {{pc.platelets}}
+        </div>
+    
+    </div>
+    <div class="row text-center m-3">
+        <div class="col-sm-12">
+            <a class="btn btn-success m-3" href="{%url 'patientDashboard'%}">Back</a>
+            <a class="btn btn-primary" href="{% url 'UpdatePC' pc.id %}">Edit Symptoms</a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+
+{%endblock%}

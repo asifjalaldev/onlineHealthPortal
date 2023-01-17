@@ -1,0 +1,195 @@
+{%extends 'home/base.html'%}
+{%load static%}
+{%block content%}
+<style>
+    .search-form {
+        background-color: rgb(194, 194, 194);
+    
+    }
+.search-form input{
+    border-radius: 17px !important;
+}
+    .img {
+        opacity: 60%;
+        object-fit: cover;
+    }
+
+    .cover-photo {
+        background-color: black;
+        max-width: 100% !important;
+
+    }
+
+    .search-input {
+        height: 37px;
+        width: 308px;
+        padding-top: 4px;
+        margin-top: 9px;
+    }
+
+    .col-sm-3 {
+        margin-bottom: -24px;
+    }
+</style>
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:weight@100;200;300;400;500;600;700;800&display=swap");
+
+
+    body {
+
+        font-family: "Poppins", sans-serif;
+        /* font-weight: 300; */
+    }
+
+
+
+    .cardclass {
+
+        width: 222px;
+        border: none;
+        border-radius: 15px;
+        padding: 4px;
+        background-color: #fff;
+        position: relative;
+        height: 237px;
+
+    }
+
+    .upper {
+
+        height: 100px;
+
+    }
+
+    .upper img {
+
+        width: 100%;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+
+    }
+
+    .user {
+        position: relative;
+    }
+
+    .profile img {
+
+
+        height: 80px;
+        width: 73px;
+        margin-top: 2px;
+        object-fit: cover;
+
+    }
+
+    .profile {
+
+        position: absolute;
+        top: -74px;
+        left: 29%;
+        height: 90px;
+        width: 80px;
+        border: 2px solid rgb(75, 247, 118);
+
+        border-radius: 50%;
+
+    }
+
+    .follow {
+
+        border-radius: 15px;
+        padding-left: 20px;
+        padding-right: 20px;
+        height: 35px;
+    }
+
+    any .stats span {
+
+        font-size: 17px;
+        text-align: center;
+    }
+</style>
+
+<div class="search-form mt-2">
+    <form action="{% url 'home' %}" method="get">
+
+        <div class="input-group mb-3">
+            <select name="catagory" id="" class="m-2 rounded">
+                <option value="0" selected>All</option>
+                {%for c in docCat%}
+                <option value="{{c.id}}">{{c.catagoryName}}</option>
+                {%endfor%}
+            </select>
+            <input type="text" class="form-control search-input searchInput" width="308px" name="query"
+                placeholder="Search doctor by name">
+            <div class="input-group-append">
+                <button class="btn btn-success m-2 rounded">search</button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+
+<div class="container align-items-center mt-2">
+    <!-- <p class="text text-success">{{total}} doctors found</p><br> -->
+    
+    <div class="row " style="padding-left: 55px;">
+        <p class="text-center">
+        {%for d in page_obj%}
+        {%if d.DoctorName%}
+       
+        <div class="col-sm-3 " style="width: auto;">
+            <div class="cardclass mb-5 " style=" background-color:rgb(199, 253, 235); ">
+
+                <div class="upper ">
+
+                    <span class="text-center"> <img src="{% static 'images/search-doctors.jpg' %}" style="height: 60px;"
+                            class="img-fluid "></span>
+                </div>
+                <div class="user text-center">
+                    <div class="profile">
+                        {%if d.profilePicture%}
+                        <img src="{{d.profilePicture.url}}" class="rounded-circle" width="80">
+                        {%else%}
+                        <img src="{% static 'images/default.jpeg' %}" class="rounded-circle" width="80">
+                        {%endif%}
+                    </div>
+                </div>
+                <div class="mt-3 text-center">
+                    <h4 class="mb-0">{{d.DoctorName}}</h4>
+                    <span class="text-muted d-block mb-2">{{d.catagory_id.catagoryName}}</span>
+                    <a class="btn btn-primary btn-sm follow" href="{% url 'bookAppointment' pk=d.id %}">Book
+                        Appointment</a>
+                </div>
+
+            </div>
+
+        </div>
+  
+        {%endif%}
+        {%endfor%}
+    </p>
+    </div>
+
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{%endblock%}

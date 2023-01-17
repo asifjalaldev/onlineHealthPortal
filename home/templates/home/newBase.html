@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+            integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+        <title>OHP</title>
+        <style>
+            .sidebar {
+                background-color: rgb(43, 43, 43);
+                width: 15%;
+                color: white;
+                display: inline;
+                min-height: 600px;
+                height: 550px;
+            }
+            @media screen and (min-width: 600px) {
+                #toggleButton{
+                    display: none;
+                }
+               
+            }
+           
+        </style>
+        
+    </head>
+
+    <body >
+<script>
+    function toggleManue(){
+        if(document.getElementById("sidBar").style.display=="none"){
+            document.getElementById("sidBar").style.display= "";
+        }else{
+            document.getElementById("sidBar").style.display= "none";
+        }
+    }
+</script>
+        <div class="container-fluid">
+            <div class="row p-2" style="background-color: green;">
+                <div class="col-lg-2">
+                    <button class="btn btn-success" onclick="toggleManue()" data-bs-toggle="collapse" data-bs-target="#sidBar" id="toggleButton">togle
+                        button</button>
+                </div>
+                <div class="col-lg-2" style="float: left;">
+                    logo
+                </div>
+                <div class="col-lg-4 text-center">
+                    Online Health Portal
+                </div>
+                <div class="col-lg-4 ">
+                    <div class="" style="float: right;">profile</div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-lg-2 sidebar" id="sidBar">
+                    <div class="row">
+                        row 1
+                    </div>
+                    <div class="row">
+                        row 2
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    content area
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    </body>
+
+</html>

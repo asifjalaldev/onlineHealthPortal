@@ -1,0 +1,46 @@
+{%extends 'home/base.html'%}
+{% load crispy_forms_tags %}
+{% load static %}
+{%block content%}
+<style>
+div a{
+    display: none;
+}
+</style>
+
+<div class="container">
+
+
+
+<div class="container" style="background-color: aquamarine;">
+    <div class="row mt-3 text-center" style="background-color: rgb(5, 253, 5);">
+                <h3>Profile Information</h3>
+    </div>
+    <div class="row text-center pt-2">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+
+            <img class="rounded-circle mb-4 " style="object-fit: cover; border: 3px solid white;" width="160" height="160" src="{{user.patient.profilePicture.url}}" alt="profile image">
+
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+
+            <form action="" method="post" enctype="multipart/form-data">
+                {%csrf_token%}
+                
+                {{form|crispy}}{{ form.media }}
+                {{u_f|crispy}}
+                <p class="text-center"><button type="submit" class="btn btn-success mt-3">Update Profile</button></p>
+            </form>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+</div>
+  
+
+</div>
+{%endblock%}

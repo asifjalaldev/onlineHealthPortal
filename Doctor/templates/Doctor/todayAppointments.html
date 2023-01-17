@@ -1,0 +1,96 @@
+{%extends 'home/base.html'%}
+{% load crispy_forms_tags %}
+{%block content%}
+
+<h1 class="mt-4">Today Appointments</h1>
+
+<!-- -------------------- -->
+<div class="row">
+    <div class="col-sm-12">
+        <div class="container">
+            <div class="row">
+                <div class="card rounded">
+                    <div class="card-header " style="background-color: rgb(0, 255, 21);">
+                        <h5 class="card-title text-center">
+                            Appointments
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        
+                       {% if todayApps %}
+                       <p class="card-text">Your today Appointments </p>
+                        {% for app in todayApps %}
+                        <div class="row text-center mt-2 pb-2 rounded" style="background-color: grey;">
+                            <div class="col-sm-3">
+                                <b>Patient</b><br>
+                                {{app.patient_id.patientName}}
+
+                            </div>
+                            <div class="col-sm-3">
+                                <b>Date</b>
+                                <br>
+                                {{app.appointment_date}}
+                            </div>
+                            <div class="col-sm-3">
+                                <b>Time</b>
+                                <br>
+                                {{app.time}}
+                            </div>
+                            <div class="col-sm-3">
+                                <b>Action</b><br>
+                                <a class="btn btn-info" href="{% url 'treat' app.id%}">start Treatment</a>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+
+                                </div>
+                                <div class="col-sm-3">
+
+                                </div>
+                                <div class="col-sm-3">
+
+                                </div>
+                                <div class="col-sm-3">
+
+                                </div>
+                            </div>
+                    </div>
+                  {%endfor%}
+                 {% else %}
+                 you do not have any appointment yet
+                 {% endif %}
+                </div>
+                <div class="card-footer text-center">
+                    <!-- <a href="http://" class="btn btn-primary">view more</a> -->
+                </div>
+            </div>
+
+            <div class="col-md-12">
+
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="col-md-6">
+        
+
+    </div>
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{%endblock%}
