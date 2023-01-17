@@ -10,6 +10,7 @@ from datetime import datetime, timedelta,date
 from django.contrib.auth.models import User
 from django.views.generic import ListView
 from Doctor.forms import UserProfileForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 @login_required(login_url='login')
 @allow_users(allowed_roles='doctor')
@@ -53,7 +54,7 @@ def dashboard(request):
         disCatCouts.append(diceaseCount)
     context={'todayApp':todayApp, 'totalTodayAppointments':total, 'diseaseCatagoryCount':disCatCouts, 'diseaseCatagories':dc,'lastMonthAppointmentsCount':lastMonthAppointmentsCount, 'unTreatedAppointments':unTreatedAppointments, 'totalAppointments':totalAppointments}
     return render(request, 'Doctor/dashboard.html',context)
-class TodayAppointmentsView(ListView):
+class TodayAppointmentsView(LoginRequiredMixin,ListView):
     model=Appointment
     context_object_name='todayApps'
     template_name='Doctor/todayAppointments.html'
@@ -87,7 +88,7 @@ def treatPatient(request, pk):
         app_id.status=False
         app_id.save()
         return redirect('doctorDashboard')
-class ListTotalAppointments(ListView):
+class ListTotalAppointments(LoginRequiredMixin,ListView):
     model=Appointment
     context_object_name="totalApp"
     template_name='Doctor/totalAppointments.html'
@@ -96,7 +97,7 @@ class ListTotalAppointments(ListView):
         doctor=Doctor.objects.get(user=self.request.user.id)
         query=qs.filter(doctor_id=doctor)
         return query
-class ListMonthlyAppointments(ListView):
+class ListMonthlyAppointments(LoginRequiredMixin,ListView):
     model=Appointment
     context_object_name="monthlyApp"
     template_name='Doctor/monthlyAppointments.html'
@@ -106,7 +107,7 @@ class ListMonthlyAppointments(ListView):
         days_before = (date.today()-timedelta(days=30)).isoformat()
         query=qs.filter(doctor_id=doctor, appointment_date__gte=days_before)
         return query
-class ListExpireAppointments(ListView):
+class ListExpireAppointments(LoginRequiredMixin,ListView):
     model=Appointment
     context_object_name="expireApp"
     template_name='Doctor/expireAppointments.html'
