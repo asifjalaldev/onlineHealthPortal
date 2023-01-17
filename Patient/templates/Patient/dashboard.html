@@ -35,7 +35,7 @@
                             {% if apps %}
                             
                             {% for app in apps %}
-                            <div class="row text-center mt-1 pb-1 rounded" style="background-color: grey;">
+                            <div class="row text-center mt-1 pb-1 rounded gx-0" style="background-color: grey;">
                                 <div class="col-sm-3">
                                     <b>Doctor</b><br>
                                     {{app.doctor_id.DoctorName}}
@@ -52,22 +52,24 @@
                                     {{app.time}}
                                 </div>
                                 <div class="col-sm-3">
+
                                     <b>Action</b><br>
-                                    <a class="btn btn-info" href="{% url 'appointmentDetailView' app.id%}">Details</a>
-                                </div>
+                                   
+                                        <a class="btn btn-info" href="{% url 'appointmentDetailView' app.id%}" style="font-size: larger; margin-right: 4px;"><span class="fa fa-info-circle"></span> </a>
+                                        <a class="btn btn-danger" href="{% url 'deleteAppointment' app.id%}" style="font-size: larger;"><span class="fas fa-trash"></span></a>
+                            
+                                    </div>
                                 <div class="row">
                                     <div class="col-sm-3">
 
                                     </div>
-                                    <div class="col-sm-3">
-
+                                    <div class="col-sm-6">
+                                        <a class="btn btn-primary" href="{% url 'myAppointments'%}">All Appointments</a>
                                     </div>
                                     <div class="col-sm-3">
 
                                     </div>
-                                    <div class="col-sm-3">
-
-                                    </div>
+                                    
                                 </div>
                             </div>
                             {%endfor%}

@@ -30,6 +30,7 @@ def dashboard(request):
         page_obj = paginator.get_page(page_number)
         total=10
         availableSlotsDict={}
+        # myapp=Appointment.objects.filter(patient_id=request.user)
         for doctor in doctors:
             appointments=Appointment.objects.filter(doctor_id=doctor, appointment_date=current_date).count()
             doctorUsername=doctor.user.username
@@ -40,6 +41,14 @@ def dashboard(request):
         prescriptions=Prescription.objects.filter(patient_id=p).order_by('-appointment_id')[:2]#getting the lattest two presc data 
         context={'page_obj':page_obj,'slotsDict':availableSlotsDict, 'apps': apps, 'cdate': current_date, 'docCat':doctorsCatagories, 'pre':prescriptions}
         return render(request, 'Patient/dashboard.html',context)
+class myAppointments(ListView):
+    model=Appointment
+    context_object_name='myApps'
+    template_name='Patient/myAppointments.html'
+    def get_queryset(self, **kwargs):
+        qs=super().get_queryset(**kwargs)
+        apps=qs.filter(patient_id=self.request.user.patient)
+        return apps
 
 @login_required(login_url='login')
 @allow_users(allowed_roles=['patient'])
@@ -134,6 +143,7 @@ class CreatePatientCondition(CreateView):
     model=PatientCondition
     template_name="Patient/patientCondition.html"
     success_url=reverse_lazy('patientDashboard')
+    error_message="something went wrong."
     fields=['symptoms', 'BP','BMI','BS','HB','platelets']
     def form_valid(self, form ):
         p=Patient.objects.get(user=self.request.user) #getting patient
@@ -146,10 +156,11 @@ class CreatePatientCondition(CreateView):
 
 def patientConditonDetail(request, pk):
    if request.method=='GET':
-        pc=PatientCondition.objects.get(appointment_id=pk)
-        request.session['app_id']=pk
-        context={'pc':pc}
-        return render(request,'Patient/patientConditionDetail.html',context)
+    
+            pc=PatientCondition.objects.get(appointment_id=pk)
+            request.session['app_id']=pk
+            context={'pc':pc}
+            return render(request,'Patient/patientConditionDetail.html',context)
 class UpdatePCondView(UpdateView):
     model=PatientCondition
     fields=['symptoms','BP','BMI', 'BS', 'HB','platelets']
