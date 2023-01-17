@@ -15,6 +15,8 @@ from django.db.models import Q
 from django.views.generic import *
 from datetime import datetime
 from django.core.paginator import Paginator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
 # Create your views here.
 @login_required(login_url='login')
 @allow_users(allowed_roles=['patient'])
@@ -41,7 +43,8 @@ def dashboard(request):
         prescriptions=Prescription.objects.filter(patient_id=p).order_by('-appointment_id')[:2]#getting the lattest two presc data 
         context={'page_obj':page_obj,'slotsDict':availableSlotsDict, 'apps': apps, 'cdate': current_date, 'docCat':doctorsCatagories, 'pre':prescriptions}
         return render(request, 'Patient/dashboard.html',context)
-class myAppointments(ListView):
+
+class myAppointments(LoginRequiredMixin,ListView):
     model=Appointment
     context_object_name='myApps'
     template_name='Patient/myAppointments.html'
@@ -78,6 +81,7 @@ def patientProfile(request):
             print('form not valid')
     return render(request,'patient/dashboard.html')
 @login_required(login_url='login')
+@allow_users(allowed_roles=['patient'])
 def bookAppointment(request,pk):
     if request.method=='GET':
         form= BookAppointmentForm
@@ -133,13 +137,14 @@ def bookAppointment(request,pk):
                 request.session['appoinment_id']=app.id
                 messages.success(request,"Your appoinment has been booked!")
                 return redirect('createCondition')
-    
+@login_required(login_url='login')
+@allow_users(allowed_roles=['patient'])   
 def deleteAppointment(request,pk):
     app=Appointment.objects.get(id=pk)
     app.delete()
     messages.success(request,"appoinment has been canceled!")
     return redirect('patientDashboard')
-class CreatePatientCondition(CreateView):
+class CreatePatientCondition(LoginRequiredMixin,CreateView):
     model=PatientCondition
     template_name="Patient/patientCondition.html"
     success_url=reverse_lazy('patientDashboard')
@@ -153,7 +158,8 @@ class CreatePatientCondition(CreateView):
         form.instance.patient_id = p#storing patient data in the form
         messages.success(self.request, "You appointment has been booked. Doctor review your symtoms very soon.")
         return super().form_valid(form) 
-
+@login_required(login_url='login')
+@allow_users(allowed_roles=['patient'])
 def patientConditonDetail(request, pk):
    if request.method=='GET':
     
@@ -161,7 +167,7 @@ def patientConditonDetail(request, pk):
             request.session['app_id']=pk
             context={'pc':pc}
             return render(request,'Patient/patientConditionDetail.html',context)
-class UpdatePCondView(UpdateView):
+class UpdatePCondView(LoginRequiredMixin,UpdateView):
     model=PatientCondition
     fields=['symptoms','BP','BMI', 'BS', 'HB','platelets']
     def get_success_url(self):
@@ -173,7 +179,7 @@ class UpdatePCondView(UpdateView):
         form.instance.patient_id=Patient.objects.get(user=user)
         form.instance.appointment_id=Appointment.objects.get(id=self.request.session.get('app_id'))
         return super().form_valid(form)
-class EditAppiontmentView(UpdateView):
+class EditAppiontmentView(LoginRequiredMixin,UpdateView):
     model=Appointment
     form_class=BookAppointmentForm
     success_url=reverse_lazy('patientDashboard')
@@ -222,6 +228,7 @@ class EditAppiontmentView(UpdateView):
                 self.request.session['appoinment_id']=app.id
                 messages.success(self.request,"Your appoinment has been updated!")
                 return super().form_valid(form)
+
 def searchDoctors(request):
    
     if request.method=='GET':
@@ -253,7 +260,7 @@ def searchDoctors(request):
                 page_obj = paginator.get_page(page_number)
         context={'page_obj':page_obj, 'docCat': doctorsCatagories, 'total':total}
         return render(request, 'Patient/searchDoctors.html',context)
-class PrescriptionDetailView(DetailView):
+class PrescriptionDetailView(LoginRequiredMixin,DetailView):
     model=Prescription
     template_name='Patient/PrescriptionDetail.html'
     context_object_name='pre'
@@ -261,7 +268,8 @@ class AppointmentDetailView(DetailView):
     model=Appointment
     template_name="Patient/AppointmentDetail.html"
     context_object_name='app'
-
+@login_required(login_url='login')
+@allow_users(allowed_roles=['patient'])
 def appointmentDetailView(request,pk):
     if request.method=='GET':
         app=Appointment.objects.get(id=pk)
